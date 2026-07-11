@@ -547,7 +547,7 @@ For detailed contribution guidelines, see [CONTRIBUTING.md](.github/CONTRIBUTING
 
 ## 📊 Resource Status
 
-This provider supports 631 Azure resource types. Here's the implementation status compared to the azurerm provider:
+This provider supports 625 Azure resource types. Here's the implementation status compared to the azurerm provider:
 
 <details>
 <summary>🔍 View Detailed Resource Status Table</summary>
@@ -599,6 +599,16 @@ This provider supports 631 Azure resource types. Here's the implementation statu
 |azurerm_app_service_environment | ✔ |
 |azurerm_app_service_hybrid_connection | ✔ |
 |azurerm_app_service_plan | ✔ |
+|azurerm_cognitive_account_project | ✔ |
+|azurerm_eventgrid_namespace_topic | ✔ |
+|azurerm_eventgrid_partner_namespace | ✔ |
+|azurerm_eventgrid_partner_registration | ✔ |
+|azurerm_managed_devops_pool | ✔ |
+|azurerm_managed_redis | ✔ |
+|azurerm_mongo_cluster_firewall_rule | ✔ |
+|azurerm_mongo_cluster_user | ✔ |
+|azurerm_network_security_perimeter_access_rule | ✔ |
+|azurerm_network_security_perimeter_profile | ✔ |
 |azurerm_service_plan | ✔ |
 |azurerm_app_service_slot | ✔ |
 |azurerm_app_service_slot_virtual_network_swift_connection | ✔ |
@@ -1131,6 +1141,7 @@ This provider supports 631 Azure resource types. Here's the implementation statu
 |azurerm_traffic_manager_endpoint | ✔ |
 |azurerm_traffic_manager_geographical_location | ✔ |
 |azurerm_traffic_manager_profile | ✔ |
+|azurerm_trusted_signing_account | ✔ |
 |azurerm_user_assigned_identity | ✔ |
 |azurerm_virtual_desktop_application_group | ✔ |
 |azurerm_virtual_desktop_host_pool | ✔ |
@@ -1162,9 +1173,12 @@ This provider supports 631 Azure resource types. Here's the implementation statu
 |azurerm_web_application_firewall_policy | ✔ |
 |azurerm_web_pubsub | ✔ |
 |azurerm_web_pubsub_hub | ✔ |
+|azurerm_windows_function_app | ✔ |
+|azurerm_windows_function_app_slot | ✔ |
 |azurerm_windows_virtual_machine | ✔ |
 |azurerm_windows_virtual_machine_scale_set | ✔ |
 |azurerm_app_service_custom_hostname_binding | ✔ |
+|azurerm_windows_web_app_slot | ✔ |
 
 </details>
 

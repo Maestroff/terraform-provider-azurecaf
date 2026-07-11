@@ -214,6 +214,7 @@ This document lists all Azure resource types supported by terraform-provider-azu
 - `azurerm_cognitive_account_health_insights`
 - `azurerm_cognitive_account_immersive_reader`
 - `azurerm_cognitive_account_openai`
+- `azurerm_cognitive_account_project`
 - `azurerm_cognitive_account_rai_blocklist`
 - `azurerm_cognitive_account_rai_policy`
 - `azurerm_cognitive_account_speech_services`
@@ -423,8 +424,11 @@ This document lists all Azure resource types supported by terraform-provider-azu
 - `azurerm_eventgrid_domain_topic`
 - `azurerm_eventgrid_domain`
 - `azurerm_eventgrid_event_subscription`
+- `azurerm_eventgrid_namespace_topic`
 - `azurerm_eventgrid_namespace`
 - `azurerm_eventgrid_partner_configuration`
+- `azurerm_eventgrid_partner_namespace`
+- `azurerm_eventgrid_partner_registration`
 - `azurerm_eventgrid_subscription`
 - `azurerm_eventgrid_system_topic_event_subscription`
 - `azurerm_eventgrid_system_topic`
@@ -637,10 +641,12 @@ This document lists all Azure resource types supported by terraform-provider-azu
 - `azurerm_maintenance_configuration`
 - `azurerm_managed_application_definition`
 - `azurerm_managed_application`
+- `azurerm_managed_devops_pool`
 - `azurerm_managed_disk_os`
 - `azurerm_managed_disk_sas_token`
 - `azurerm_managed_disk`
 - `azurerm_managed_lustre_file_system`
+- `azurerm_managed_redis`
 - `azurerm_management_group_policy_assignment`
 - `azurerm_management_group_policy_exemption`
 - `azurerm_management_group_policy_remediation`
@@ -671,6 +677,8 @@ This document lists all Azure resource types supported by terraform-provider-azu
 - `azurerm_mobile_network_site`
 - `azurerm_mobile_network_slice`
 - `azurerm_mobile_network`
+- `azurerm_mongo_cluster_firewall_rule`
+- `azurerm_mongo_cluster_user`
 - `azurerm_mongo_cluster`
 - `azurerm_monitor_aad_diagnostic_setting`
 - `azurerm_monitor_action_group`
@@ -784,6 +792,8 @@ This document lists all Azure resource types supported by terraform-provider-azu
 - `azurerm_network_profile`
 - `azurerm_network_security_group_rule`
 - `azurerm_network_security_group`
+- `azurerm_network_security_perimeter_access_rule`
+- `azurerm_network_security_perimeter_profile`
 - `azurerm_network_security_perimeter`
 - `azurerm_network_security_rule`
 - `azurerm_network_service_tags`
@@ -1146,6 +1156,7 @@ This document lists all Azure resource types supported by terraform-provider-azu
 - `azurerm_traffic_manager_endpoint`
 - `azurerm_traffic_manager_geographical_location`
 - `azurerm_traffic_manager_profile`
+- `azurerm_trusted_signing_account`
 - `azurerm_user_assigned_identity`
 - `azurerm_video_indexer_account`
 - `azurerm_virtual_desktop_application_group`
@@ -1183,8 +1194,11 @@ This document lists all Azure resource types supported by terraform-provider-azu
 - `azurerm_web_pubsub_hub`
 - `azurerm_web_pubsub`
 - `azurerm_web_sites`
+- `azurerm_windows_function_app_slot`
+- `azurerm_windows_function_app`
 - `azurerm_windows_virtual_machine_scale_set`
 - `azurerm_windows_virtual_machine`
+- `azurerm_windows_web_app_slot`
 - `azurerm_windows_web_app`
 - `databricks_cluster`
 - `databricks_high_concurrency_cluster`
