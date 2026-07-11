@@ -17699,5 +17699,229 @@
       "resource": "Private DNS zone",
       "resource_provider_namespace": "Microsoft.Network/privateDnsZones"
     }
+  },
+  {
+    "name": "azurerm_windows_function_app",
+    "slug": "winfa",
+    "min_length": 1,
+    "max_length": 80,
+    "validation_regex": "\"^[a-zA-Z0-9][a-zA-Z0-9._-]{0,78}[a-zA-Z0-9]$\"",
+    "regex": "\"[^a-zA-Z0-9._-]\"",
+    "scope": "resourceGroup",
+    "dashes": true,
+    "lowercase": false,
+    "official": {
+      "slug": "func",
+      "resource": "Azure Windows Function App",
+      "resource_provider_namespace": "Microsoft.Web"
+    }
+  },
+  {
+    "name": "azurerm_windows_function_app_slot",
+    "slug": "winfas",
+    "min_length": 1,
+    "max_length": 80,
+    "validation_regex": "\"^[a-zA-Z0-9][a-zA-Z0-9._-]{0,78}[a-zA-Z0-9]$\"",
+    "regex": "\"[^a-zA-Z0-9._-]\"",
+    "scope": "resourceGroup",
+    "dashes": true,
+    "lowercase": false,
+    "official": {
+      "slug": "func",
+      "resource": "Azure Windows Function App Slot",
+      "resource_provider_namespace": "Microsoft.Web"
+    }
+  },
+  {
+    "name": "azurerm_windows_web_app_slot",
+    "slug": "wwapps",
+    "min_length": 1,
+    "max_length": 80,
+    "validation_regex": "\"^[a-zA-Z0-9][a-zA-Z0-9._-]{0,78}[a-zA-Z0-9]$\"",
+    "regex": "\"[^a-zA-Z0-9._-]\"",
+    "scope": "resourceGroup",
+    "dashes": true,
+    "lowercase": false,
+    "official": {
+      "slug": "app",
+      "resource": "Azure Windows Web App Slot",
+      "resource_provider_namespace": "Microsoft.Web"
+    }
+  },
+  {
+    "name": "azurerm_managed_redis",
+    "slug": "amr",
+    "min_length": 1,
+    "max_length": 63,
+    "validation_regex": "\"^[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]$\"",
+    "regex": "\"[^a-zA-Z0-9-]\"",
+    "scope": "resourceGroup",
+    "dashes": true,
+    "lowercase": false,
+    "official": {
+      "slug": "amr",
+      "resource": "Azure Managed Redis",
+      "resource_provider_namespace": "Microsoft.Cache"
+    }
+  },
+  {
+    "name": "azurerm_managed_devops_pool",
+    "slug": "mdp",
+    "min_length": 3,
+    "max_length": 44,
+    "validation_regex": "\"^[a-zA-Z0-9][a-zA-Z0-9-.]{1,42}[a-zA-Z0-9_]$\"",
+    "regex": "\"[^a-zA-Z0-9-.]\"",
+    "scope": "resourceGroup",
+    "dashes": true,
+    "lowercase": false,
+    "official": {
+      "slug": "mdp",
+      "resource": "Managed DevOps Pool",
+      "resource_provider_namespace": "Microsoft.DevOpsInfrastructure"
+    }
+  },
+  {
+    "name": "azurerm_trusted_signing_account",
+    "slug": "tsa",
+    "min_length": 3,
+    "max_length": 24,
+    "validation_regex": "\"^[a-zA-Z0-9][a-zA-Z0-9-]{1,22}[a-zA-Z0-9]$\"",
+    "regex": "\"[^a-zA-Z0-9-]\"",
+    "scope": "resourceGroup",
+    "dashes": true,
+    "lowercase": false,
+    "official": {
+      "slug": "tsa",
+      "resource": "Trusted Signing Account",
+      "resource_provider_namespace": "Microsoft.CodeSigning"
+    }
+  },
+  {
+    "name": "azurerm_eventgrid_partner_namespace",
+    "slug": "egpn",
+    "min_length": 3,
+    "max_length": 50,
+    "validation_regex": "\"^[a-zA-Z0-9-]{3,50}$\"",
+    "regex": "`[^0-9A-Za-z-]`",
+    "scope": "resourceGroup",
+    "dashes": true,
+    "lowercase": false,
+    "official": {
+      "slug": "egpn",
+      "resource": "Azure Eventgrid Partner Namespace",
+      "resource_provider_namespace": "Microsoft.EventGrid"
+    }
+  },
+  {
+    "name": "azurerm_eventgrid_partner_registration",
+    "slug": "egpr",
+    "min_length": 3,
+    "max_length": 50,
+    "validation_regex": "\"^[a-zA-Z0-9-]{3,50}$\"",
+    "regex": "`[^0-9A-Za-z-]`",
+    "scope": "resourceGroup",
+    "dashes": true,
+    "lowercase": false,
+    "official": {
+      "slug": "egpr",
+      "resource": "Azure Eventgrid Partner Registration",
+      "resource_provider_namespace": "Microsoft.EventGrid"
+    }
+  },
+  {
+    "name": "azurerm_eventgrid_namespace_topic",
+    "slug": "egnt",
+    "min_length": 3,
+    "max_length": 50,
+    "validation_regex": "\"^[a-zA-Z0-9-]{3,50}$\"",
+    "regex": "`[^0-9A-Za-z-]`",
+    "scope": "resourceGroup",
+    "dashes": true,
+    "lowercase": false,
+    "official": {
+      "slug": "egnt",
+      "resource": "Azure Eventgrid Namespace Topic",
+      "resource_provider_namespace": "Microsoft.EventGrid"
+    }
+  },
+  {
+    "name": "azurerm_mongo_cluster_firewall_rule",
+    "slug": "mongofw",
+    "min_length": 1,
+    "max_length": 80,
+    "validation_regex": "\"^[a-zA-Z0-9][a-zA-Z0-9._-]{0,78}[a-zA-Z0-9]$\"",
+    "regex": "\"[^a-zA-Z0-9._-]\"",
+    "scope": "resourceGroup",
+    "dashes": true,
+    "lowercase": false,
+    "official": {
+      "slug": "mongofw",
+      "resource": "Azure Mongo Cluster Firewall Rule",
+      "resource_provider_namespace": "Microsoft.DocumentDB"
+    }
+  },
+  {
+    "name": "azurerm_mongo_cluster_user",
+    "slug": "mongou",
+    "min_length": 1,
+    "max_length": 80,
+    "validation_regex": "\"^[a-zA-Z0-9][a-zA-Z0-9._-]{0,78}[a-zA-Z0-9]$\"",
+    "regex": "\"[^a-zA-Z0-9._-]\"",
+    "scope": "resourceGroup",
+    "dashes": true,
+    "lowercase": false,
+    "official": {
+      "slug": "mongou",
+      "resource": "Azure Mongo Cluster User",
+      "resource_provider_namespace": "Microsoft.DocumentDB"
+    }
+  },
+  {
+    "name": "azurerm_network_security_perimeter_profile",
+    "slug": "nspp",
+    "min_length": 1,
+    "max_length": 24,
+    "validation_regex": "\"^[a-zA-Z0-9][a-zA-Z0-9-_]{0,22}[a-zA-Z0-9]$\"",
+    "regex": "\"[^a-zA-Z0-9]\"",
+    "scope": "resourceGroup",
+    "dashes": true,
+    "lowercase": false,
+    "official": {
+      "slug": "nspp",
+      "resource": "Network Security Perimeter Profile",
+      "resource_provider_namespace": "Microsoft.Network"
+    }
+  },
+  {
+    "name": "azurerm_network_security_perimeter_access_rule",
+    "slug": "nspar",
+    "min_length": 1,
+    "max_length": 24,
+    "validation_regex": "\"^[a-zA-Z0-9][a-zA-Z0-9-_]{0,22}[a-zA-Z0-9]$\"",
+    "regex": "\"[^a-zA-Z0-9]\"",
+    "scope": "resourceGroup",
+    "dashes": true,
+    "lowercase": false,
+    "official": {
+      "slug": "nspar",
+      "resource": "Network Security Perimeter Access Rule",
+      "resource_provider_namespace": "Microsoft.Network"
+    }
+  },
+  {
+    "name": "azurerm_cognitive_account_project",
+    "slug": "proj",
+    "min_length": 2,
+    "max_length": 64,
+    "validation_regex": "\"^[a-zA-Z0-9][a-zA-Z0-9-]{0,63}$\"",
+    "regex": "\"[^0-9A-Za-z-]\"",
+    "scope": "resourceGroup",
+    "dashes": true,
+    "lowercase": false,
+    "official": {
+      "slug": "proj",
+      "resource": "Azure AI Foundry Project (Cognitive Account Project)",
+      "resource_provider_namespace": "Microsoft.CognitiveServices"
+    }
   }
 ]

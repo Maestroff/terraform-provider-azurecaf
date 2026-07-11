@@ -19,6 +19,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - (placeholder)
 
+## [v1.1.0] - 2026-07-11
+
+Fork release (Maestroff/azurecaf registry versioning).
+
+### Added
+- 14 new resource types for parity with azurerm v4.80:
+  - `azurerm_windows_function_app` (slug `winfa`), `azurerm_windows_function_app_slot` (`winfas`), `azurerm_windows_web_app_slot` (`wwapps`)
+  - `azurerm_managed_redis` (`amr`) — Azure Managed Redis
+  - `azurerm_managed_devops_pool` (`mdp`) — Managed DevOps Pools
+  - `azurerm_trusted_signing_account` (`tsa`) — Trusted Signing
+  - `azurerm_eventgrid_partner_namespace` (`egpn`), `azurerm_eventgrid_partner_registration` (`egpr`), `azurerm_eventgrid_namespace_topic` (`egnt`)
+  - `azurerm_mongo_cluster_firewall_rule` (`mongofw`), `azurerm_mongo_cluster_user` (`mongou`)
+  - `azurerm_network_security_perimeter_profile` (`nspp`), `azurerm_network_security_perimeter_access_rule` (`nspar`)
+  - `azurerm_cognitive_account_project` (`proj`) — AI Foundry project (new-style resource)
+- Unit tests covering all new resource types (`new_resource_types_test.go`)
+- Regenerated `docs/resource_types.md` and `docs/azure_resources.md`
+
 ## [v4.0.0] - 2026-03-06 - MAJOR RELEASE
 
 ### 🔴 BREAKING CHANGES

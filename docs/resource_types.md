@@ -216,6 +216,7 @@ Complete list of supported Terraform resource types with their naming constraint
 | `azurerm_cognitive_account_health_insights` | 1 | 24 | false | true |
 | `azurerm_cognitive_account_immersive_reader` | 1 | 24 | false | true |
 | `azurerm_cognitive_account_openai` | 1 | 24 | false | true |
+| `azurerm_cognitive_account_project` | 2 | 64 | false | true |
 | `azurerm_cognitive_account_rai_blocklist` | 1 | 80 | false | true |
 | `azurerm_cognitive_account_rai_policy` | 1 | 80 | false | true |
 | `azurerm_cognitive_account_speech_services` | 1 | 24 | false | true |
@@ -425,8 +426,11 @@ Complete list of supported Terraform resource types with their naming constraint
 | `azurerm_eventgrid_domain_topic` | 3 | 50 | false | true |
 | `azurerm_eventgrid_domain` | 3 | 50 | false | true |
 | `azurerm_eventgrid_event_subscription` | 3 | 64 | false | true |
+| `azurerm_eventgrid_namespace_topic` | 3 | 50 | false | true |
 | `azurerm_eventgrid_namespace` | 1 | 80 | false | true |
 | `azurerm_eventgrid_partner_configuration` | 1 | 80 | false | true |
+| `azurerm_eventgrid_partner_namespace` | 3 | 50 | false | true |
+| `azurerm_eventgrid_partner_registration` | 3 | 50 | false | true |
 | `azurerm_eventgrid_subscription` | 1 | 24 | false | true |
 | `azurerm_eventgrid_system_topic_event_subscription` | 1 | 80 | false | true |
 | `azurerm_eventgrid_system_topic` | 1 | 80 | false | true |
@@ -639,10 +643,12 @@ Complete list of supported Terraform resource types with their naming constraint
 | `azurerm_maintenance_configuration` | 1 | 60 | false | true |
 | `azurerm_managed_application_definition` | 1 | 80 | false | true |
 | `azurerm_managed_application` | 1 | 80 | false | true |
+| `azurerm_managed_devops_pool` | 3 | 44 | false | true |
 | `azurerm_managed_disk_os` | 1 | 24 | false | true |
 | `azurerm_managed_disk_sas_token` | 1 | 80 | false | true |
 | `azurerm_managed_disk` | 1 | 80 | false | true |
 | `azurerm_managed_lustre_file_system` | 1 | 80 | false | true |
+| `azurerm_managed_redis` | 1 | 63 | false | true |
 | `azurerm_management_group_policy_assignment` | 1 | 80 | false | true |
 | `azurerm_management_group_policy_exemption` | 1 | 80 | false | true |
 | `azurerm_management_group_policy_remediation` | 1 | 80 | false | true |
@@ -673,6 +679,8 @@ Complete list of supported Terraform resource types with their naming constraint
 | `azurerm_mobile_network_site` | 1 | 80 | false | true |
 | `azurerm_mobile_network_slice` | 1 | 80 | false | true |
 | `azurerm_mobile_network` | 1 | 80 | false | true |
+| `azurerm_mongo_cluster_firewall_rule` | 1 | 80 | false | true |
+| `azurerm_mongo_cluster_user` | 1 | 80 | false | true |
 | `azurerm_mongo_cluster` | 1 | 80 | false | true |
 | `azurerm_monitor_aad_diagnostic_setting` | 1 | 80 | false | true |
 | `azurerm_monitor_action_group` | 1 | 260 | false | true |
@@ -786,6 +794,8 @@ Complete list of supported Terraform resource types with their naming constraint
 | `azurerm_network_profile` | 1 | 80 | false | true |
 | `azurerm_network_security_group_rule` | 1 | 80 | false | true |
 | `azurerm_network_security_group` | 1 | 80 | false | true |
+| `azurerm_network_security_perimeter_access_rule` | 1 | 24 | false | true |
+| `azurerm_network_security_perimeter_profile` | 1 | 24 | false | true |
 | `azurerm_network_security_perimeter` | 1 | 24 | false | true |
 | `azurerm_network_security_rule` | 1 | 80 | false | true |
 | `azurerm_network_service_tags` | 1 | 80 | false | true |
@@ -1148,6 +1158,7 @@ Complete list of supported Terraform resource types with their naming constraint
 | `azurerm_traffic_manager_endpoint` | 1 | 80 | false | true |
 | `azurerm_traffic_manager_geographical_location` | 1 | 80 | false | true |
 | `azurerm_traffic_manager_profile` | 1 | 63 | false | true |
+| `azurerm_trusted_signing_account` | 3 | 24 | false | true |
 | `azurerm_user_assigned_identity` | 3 | 128 | true | true |
 | `azurerm_video_indexer_account` | 1 | 24 | false | true |
 | `azurerm_virtual_desktop_application_group` | 1 | 260 | false | true |
@@ -1185,8 +1196,11 @@ Complete list of supported Terraform resource types with their naming constraint
 | `azurerm_web_pubsub_hub` | 1 | 128 | false | false |
 | `azurerm_web_pubsub` | 3 | 63 | false | true |
 | `azurerm_web_sites` | 1 | 80 | false | true |
+| `azurerm_windows_function_app_slot` | 1 | 80 | false | true |
+| `azurerm_windows_function_app` | 1 | 80 | false | true |
 | `azurerm_windows_virtual_machine_scale_set` | 1 | 15 | false | true |
 | `azurerm_windows_virtual_machine` | 1 | 15 | false | true |
+| `azurerm_windows_web_app_slot` | 1 | 80 | false | true |
 | `azurerm_windows_web_app` | 2 | 60 | false | true |
 | `databricks_cluster` | 3 | 30 | false | true |
 | `databricks_high_concurrency_cluster` | 3 | 30 | false | true |
