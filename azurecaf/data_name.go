@@ -108,12 +108,21 @@ func dataName() *schema.Resource {
 				Default:     false,
 				Description: "Use legacy slug for backward compatibility (default: false in v4.0.0+, set true to maintain v3.x behavior)",
 			},
+			"error_when_exceeding_max_length": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				ForceNew:    true,
+				Default:     false,
+				Description: "Return an error instead of omitting name components when the composed name exceeds the resource type maximum length.",
+			},
 		},
 	}
 }
 
 func dataNameRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	getNameReadResult(d, meta)
+	if err := getNameReadResult(d, meta); err != nil {
+		return diag.FromErr(err)
+	}
 	return diag.Diagnostics{}
 }
 
@@ -127,6 +136,7 @@ func getNameReadResult(d *schema.ResourceData, meta interface{}) error {
 	passthrough := d.Get("passthrough").(bool)
 	useSlug := d.Get("use_slug").(bool)
 	useLegacySlug := d.Get("use_legacy_slug").(bool)
+	errorWhenExceedingMaxLength := d.Get("error_when_exceeding_max_length").(bool)
 	randomLength := d.Get("random_length").(int)
 	randomSeed := int64(d.Get("random_seed").(int))
 
@@ -136,7 +146,7 @@ func getNameReadResult(d *schema.ResourceData, meta interface{}) error {
 
 	namePrecedence := []string{"name", "slug", "random", "suffixes", "prefixes"}
 
-	resourceName, err := getResourceName(resourceType, separator, prefixes, name, suffixes, randomSuffix, convention, cleanInput, passthrough, useSlug, useLegacySlug, namePrecedence)
+	resourceName, err := getResourceName(resourceType, separator, prefixes, name, suffixes, randomSuffix, convention, cleanInput, passthrough, useSlug, useLegacySlug, namePrecedence, errorWhenExceedingMaxLength)
 	if err != nil {
 		return err
 	}

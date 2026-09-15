@@ -307,7 +307,7 @@ func TestComposeName(t *testing.T) {
 	namePrecedence := []string{"name", "random", "slug", "suffixes", "prefixes"}
 	prefixes := []string{"a", "b"}
 	suffixes := []string{"c", "d"}
-	name := composeName("-", prefixes, "name", "slug", suffixes, "rd", 21, namePrecedence)
+	name, _ := composeName("-", prefixes, "name", "slug", suffixes, "rd", 21, namePrecedence, false)
 	expected := "a-b-slug-name-rd-c-d"
 	if name != expected {
 		t.Logf("Fail to generate name expected %s received %s", expected, name)
@@ -319,7 +319,7 @@ func TestComposeNameCutCorrect(t *testing.T) {
 	namePrecedence := []string{"name", "slug", "random", "suffixes", "prefixes"}
 	prefixes := []string{"a", "b"}
 	suffixes := []string{"c", "d"}
-	name := composeName("-", prefixes, "name", "slug", suffixes, "rd", 19, namePrecedence)
+	name, _ := composeName("-", prefixes, "name", "slug", suffixes, "rd", 19, namePrecedence, false)
 	expected := "b-slug-name-rd-c-d"
 	if name != expected {
 		t.Logf("Fail to generate name expected %s received %s", expected, name)
@@ -331,7 +331,7 @@ func TestComposeNameCutMaxLength(t *testing.T) {
 	namePrecedence := []string{"name", "slug", "random", "suffixes", "prefixes"}
 	prefixes := []string{}
 	suffixes := []string{}
-	name := composeName("-", prefixes, "aaaaaaaaaa", "bla", suffixes, "", 10, namePrecedence)
+	name, _ := composeName("-", prefixes, "aaaaaaaaaa", "bla", suffixes, "", 10, namePrecedence, false)
 	expected := "aaaaaaaaaa"
 	if name != expected {
 		t.Logf("Fail to generate name expected %s received %s", expected, name)
@@ -343,7 +343,7 @@ func TestComposeNameCutCorrectSuffixes(t *testing.T) {
 	namePrecedence := []string{"name", "slug", "random", "suffixes", "prefixes"}
 	prefixes := []string{"a", "b"}
 	suffixes := []string{"c", "d"}
-	name := composeName("-", prefixes, "name", "slug", suffixes, "rd", 15, namePrecedence)
+	name, _ := composeName("-", prefixes, "name", "slug", suffixes, "rd", 15, namePrecedence, false)
 	expected := "slug-name-rd-c"
 	if name != expected {
 		t.Logf("Fail to generate name expected %s received %s", expected, name)
@@ -355,11 +355,28 @@ func TestComposeEmptyStringArray(t *testing.T) {
 	namePrecedence := []string{"name", "slug", "random", "suffixes", "prefixes"}
 	prefixes := []string{"", "b"}
 	suffixes := []string{"", "d"}
-	name := composeName("-", prefixes, "", "", suffixes, "", 15, namePrecedence)
+	name, _ := composeName("-", prefixes, "", "", suffixes, "", 15, namePrecedence, false)
 	expected := "b-d"
 	if name != expected {
 		t.Logf("Fail to generate name expected %s received %s", expected, name)
 		t.Fail()
+	}
+}
+
+func TestComposeNameErrorWhenExceedingMaxLength(t *testing.T) {
+	namePrecedence := []string{"name", "slug", "random", "suffixes", "prefixes"}
+
+	_, err := composeName("-", []string{"prod"}, "application", "app", []string{"001"}, "abcd", 12, namePrecedence, true)
+	if err == nil {
+		t.Fatal("expected strict name composition to fail when the maximum length is exceeded")
+	}
+
+	name, err := composeName("-", []string{"prod"}, "application", "app", []string{"001"}, "abcd", 12, namePrecedence, false)
+	if err != nil {
+		t.Fatalf("expected non-strict name composition to preserve existing behavior, got: %v", err)
+	}
+	if len(name) > 12 {
+		t.Fatalf("expected non-strict result to fit the maximum length, got %q", name)
 	}
 }
 
@@ -392,7 +409,7 @@ func TestValidResourceType_invalidParameters(t *testing.T) {
 
 func TestGetResourceNameValid(t *testing.T) {
 	namePrecedence := []string{"name", "slug", "random", "suffixes", "prefixes"}
-	resourceName, err := getResourceName("azurerm_resource_group", "-", []string{"a", "b"}, "myrg", nil, "1234", "cafclassic", true, false, true, false, namePrecedence)
+	resourceName, err := getResourceName("azurerm_resource_group", "-", []string{"a", "b"}, "myrg", nil, "1234", "cafclassic", true, false, true, false, namePrecedence, false)
 	expected := "a-b-rg-myrg-1234"
 
 	if err != nil {
@@ -407,7 +424,7 @@ func TestGetResourceNameValid(t *testing.T) {
 
 func TestGetResourceNameValidRsv(t *testing.T) {
 	namePrecedence := []string{"name", "slug", "random", "suffixes", "prefixes"}
-	resourceName, err := getResourceName("azurerm_recovery_services_vault", "-", []string{"a", "b"}, "test", nil, "1234", "cafclassic", true, false, true, false, namePrecedence)
+	resourceName, err := getResourceName("azurerm_recovery_services_vault", "-", []string{"a", "b"}, "test", nil, "1234", "cafclassic", true, false, true, false, namePrecedence, false)
 	expected := "a-b-rsv-test-1234"
 
 	if err != nil {
@@ -422,7 +439,7 @@ func TestGetResourceNameValidRsv(t *testing.T) {
 
 func TestGetResourceNameValidNoSlug(t *testing.T) {
 	namePrecedence := []string{"name", "slug", "random", "suffixes", "prefixes"}
-	resourceName, err := getResourceName("azurerm_resource_group", "-", []string{"a", "b"}, "myrg", nil, "1234", "cafclassic", true, false, false, false, namePrecedence)
+	resourceName, err := getResourceName("azurerm_resource_group", "-", []string{"a", "b"}, "myrg", nil, "1234", "cafclassic", true, false, false, false, namePrecedence, false)
 	expected := "a-b-myrg-1234"
 
 	if err != nil {
@@ -437,7 +454,7 @@ func TestGetResourceNameValidNoSlug(t *testing.T) {
 
 func TestGetResourceNameInvalidResourceType(t *testing.T) {
 	namePrecedence := []string{"name", "slug", "random", "suffixes", "prefixes"}
-	resourceName, err := getResourceName("azurerm_invalid", "-", []string{"a", "b"}, "myrg", nil, "1234", "cafclassic", true, false, true, false, namePrecedence)
+	resourceName, err := getResourceName("azurerm_invalid", "-", []string{"a", "b"}, "myrg", nil, "1234", "cafclassic", true, false, true, false, namePrecedence, false)
 	expected := "a-b-rg-myrg-1234"
 
 	if err == nil {
@@ -452,12 +469,37 @@ func TestGetResourceNameInvalidResourceType(t *testing.T) {
 
 func TestGetResourceNamePassthrough(t *testing.T) {
 	namePrecedence := []string{"name", "slug", "random", "suffixes", "prefixes"}
-	resourceName, _ := getResourceName("azurerm_resource_group", "-", []string{"a", "b"}, "myrg", nil, "1234", "cafclassic", true, true, true, false, namePrecedence)
+	resourceName, _ := getResourceName("azurerm_resource_group", "-", []string{"a", "b"}, "myrg", nil, "1234", "cafclassic", true, true, true, false, namePrecedence, false)
 	expected := "myrg"
 
 	if expected != resourceName {
 		t.Logf("valid name received while an error is expected")
 		t.Fail()
+	}
+}
+
+func TestGetResourceNameErrorWhenExceedingMaxLength(t *testing.T) {
+	namePrecedence := []string{"name", "slug", "random", "suffixes", "prefixes"}
+	_, err := getResourceName("azurerm_storage_account", "-", []string{"prod"}, "applicationlong", []string{"001"}, "abcd", "cafclassic", true, false, true, false, namePrecedence, true)
+	if err == nil {
+		t.Fatal("expected strict mode to reject a name exceeding the storage account maximum length")
+	}
+}
+
+func TestDataNameErrorWhenExceedingMaxLength(t *testing.T) {
+	dataSource := Provider().DataSourcesMap["azurecaf_name"]
+	data := schema.TestResourceDataRaw(t, dataSource.Schema, map[string]interface{}{
+		"name":                            "applicationlong",
+		"resource_type":                   "azurerm_storage_account",
+		"prefixes":                        []interface{}{"prod"},
+		"suffixes":                        []interface{}{"001"},
+		"random_length":                   4,
+		"random_seed":                     1,
+		"error_when_exceeding_max_length": true,
+	})
+
+	if err := getNameReadResult(data, nil); err == nil {
+		t.Fatal("expected data source strict mode to reject a name exceeding the maximum length")
 	}
 }
 
