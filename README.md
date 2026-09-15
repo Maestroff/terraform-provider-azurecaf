@@ -201,6 +201,7 @@ data "azurecaf_name" "custom_vm" {
 | `clean_input` | bool | Remove non-compliant characters from inputs | `true` |
 | `passthrough` | bool | Validate without modification | `false` |
 | `use_slug` | bool | Include resource type abbreviation | `true` |
+| `error_when_exceeding_max_length` | bool | Return an error instead of omitting components that exceed the resource name limit | `false` |
 
 ### Output Attributes
 
