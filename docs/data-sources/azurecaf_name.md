@@ -143,6 +143,8 @@ The following arguments are supported:
 
 * `error_when_exceeding_max_length` - (Optional) Return an error instead of omitting name components when the composed name exceeds the resource type's maximum length. Defaults to `false`.
 
+* `component_order` - (Optional) Left-to-right placement of the five name components: `prefixes`, `slug`, `name`, `random`, and `suffixes`. Include each component exactly once. When omitted, the existing provider order is retained. For example, `["slug", "prefixes", "name", "random", "suffixes"]` produces `<slug>-<prefixes>-<name>-<random>-<suffixes>`.
+
 # Name Composition and Truncation
 
 This section provides detailed information about how the Azure CAF provider composes resource names, handles length constraints, and applies truncation when necessary.

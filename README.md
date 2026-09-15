@@ -202,6 +202,7 @@ data "azurecaf_name" "custom_vm" {
 | `passthrough` | bool | Validate without modification | `false` |
 | `use_slug` | bool | Include resource type abbreviation | `true` |
 | `error_when_exceeding_max_length` | bool | Return an error instead of omitting components that exceed the resource name limit | `false` |
+| `component_order` | list(string) | Left-to-right placement of `prefixes`, `slug`, `name`, `random`, and `suffixes` | Existing provider order |
 
 ### Output Attributes
 
