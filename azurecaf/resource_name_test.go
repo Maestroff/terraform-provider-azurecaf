@@ -380,6 +380,70 @@ func TestComposeNameErrorWhenExceedingMaxLength(t *testing.T) {
 	}
 }
 
+func TestComposeNameWithComponentOrder(t *testing.T) {
+	componentOrder := []string{"slug", "prefixes", "name", "random", "suffixes"}
+	name, err := composeNameWithComponentOrder("-", []string{"dev", "orders"}, "api", "app", []string{"001"}, "abcd", 80, componentOrder, true)
+	if err != nil {
+		t.Fatalf("expected custom component order to compose successfully, got: %v", err)
+	}
+
+	const expected = "app-dev-orders-api-abcd-001"
+	if name != expected {
+		t.Fatalf("expected %q, got %q", expected, name)
+	}
+}
+
+func TestComponentOrderFromResourceData(t *testing.T) {
+	t.Run("uses default order when omitted", func(t *testing.T) {
+		d := schema.TestResourceDataRaw(t, resourceName().Schema, map[string]interface{}{})
+		componentOrder, err := componentOrderFromResourceData(d)
+		if err != nil {
+			t.Fatalf("expected omitted component_order to use the default, got: %v", err)
+		}
+		if !reflect.DeepEqual(componentOrder, defaultComponentOrder) {
+			t.Fatalf("expected default component order %v, got %v", defaultComponentOrder, componentOrder)
+		}
+	})
+
+	t.Run("rejects duplicates", func(t *testing.T) {
+		d := schema.TestResourceDataRaw(t, resourceName().Schema, map[string]interface{}{
+			"component_order": []interface{}{"slug", "prefixes", "name", "random", "random"},
+		})
+		_, err := componentOrderFromResourceData(d)
+		if err == nil {
+			t.Fatal("expected duplicate component_order entry to return an error")
+		}
+	})
+
+	t.Run("rejects unsupported components", func(t *testing.T) {
+		d := schema.TestResourceDataRaw(t, resourceName().Schema, map[string]interface{}{
+			"component_order": []interface{}{"slug", "prefixes", "name", "random", "environment"},
+		})
+		_, err := componentOrderFromResourceData(d)
+		if err == nil {
+			t.Fatal("expected unsupported component_order entry to return an error")
+		}
+	})
+}
+
+func TestDataNameComponentOrder(t *testing.T) {
+	d := schema.TestResourceDataRaw(t, dataName().Schema, map[string]interface{}{
+		"name":            "api",
+		"resource_type":   "azurerm_resource_group",
+		"prefixes":        []interface{}{"prod"},
+		"suffixes":        []interface{}{"001"},
+		"component_order": []interface{}{"slug", "prefixes", "name", "random", "suffixes"},
+	})
+
+	if err := getNameReadResult(d, nil); err != nil {
+		t.Fatalf("expected data source to support component_order, got: %v", err)
+	}
+
+	if result := d.Get("result").(string); result != "rg-prod-api-001" {
+		t.Fatalf("expected custom component order result %q, got %q", "rg-prod-api-001", result)
+	}
+}
+
 func TestValidResourceType_validParameters(t *testing.T) {
 	resourceType := "azurerm_resource_group"
 	resourceTypes := []string{"azurerm_container_registry", "azurerm_storage_account"}

@@ -10,6 +10,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
+var defaultComponentOrder = []string{"prefixes", "slug", "name", "random", "suffixes"}
+
+var nameComponentPrecedence = []string{"name", "slug", "random", "suffixes", "prefixes"}
+
 // resourceNameV2 creates and returns the schema for the azurecaf_name resource (version 2).
 // This resource generates Azure-compliant resource names following Cloud Adoption Framework
 // naming conventions and Azure resource naming requirements.
@@ -171,6 +175,18 @@ func resourceName() *schema.Resource {
 				},
 				Optional: true,
 				ForceNew: true,
+			},
+			"component_order": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				ForceNew:    true,
+				MinItems:    5,
+				MaxItems:    5,
+				Description: "Left-to-right order for prefixes, slug, name, random, and suffixes. Omit to use the existing provider order.",
+				Elem: &schema.Schema{
+					Type:         schema.TypeString,
+					ValidateFunc: validation.StringInSlice(defaultComponentOrder, false),
+				},
 			},
 			"random_length": {
 				Type:         schema.TypeInt,
@@ -474,6 +490,81 @@ func composeName(separator string,
 	return content, nil
 }
 
+// composeNameWithComponentOrder composes a name using the supplied left-to-right
+// component order. It retains the existing component omission priority when a
+// name must fit within maxlength.
+func composeNameWithComponentOrder(separator string,
+	prefixes []string,
+	name string,
+	slug string,
+	suffixes []string,
+	randomSuffix string,
+	maxlength int,
+	componentOrder []string,
+	errorWhenExceedingMaxLength bool) (string, error) {
+	if errorWhenExceedingMaxLength {
+		contents := composeNameComponentsWithOrder(prefixes, name, slug, suffixes, randomSuffix, componentOrder)
+		content := strings.Join(contents, separator)
+		if len(content) > maxlength {
+			return "", fmt.Errorf("composed name %q exceeds maximum length of %d by %d characters", content, maxlength, len(content)-maxlength)
+		}
+		return content, nil
+	}
+
+	selectedPrefixes := []string{}
+	selectedSuffixes := []string{}
+	selectedName := ""
+	selectedSlug := ""
+	selectedRandom := ""
+	currentLength := 0
+
+	addIfFits := func(value string) bool {
+		if len(value) == 0 {
+			return false
+		}
+		separatorLength := 0
+		if currentLength > 0 {
+			separatorLength = len(separator)
+		}
+		if currentLength+separatorLength+len(value) > maxlength {
+			return false
+		}
+		currentLength += separatorLength + len(value)
+		return true
+	}
+
+	for _, component := range nameComponentPrecedence {
+		switch component {
+		case "name":
+			if addIfFits(name) {
+				selectedName = name
+			}
+		case "slug":
+			if addIfFits(slug) {
+				selectedSlug = slug
+			}
+		case "random":
+			if addIfFits(randomSuffix) {
+				selectedRandom = randomSuffix
+			}
+		case "suffixes":
+			for _, suffix := range suffixes {
+				if addIfFits(suffix) {
+					selectedSuffixes = append(selectedSuffixes, suffix)
+				}
+			}
+		case "prefixes":
+			for i := len(prefixes) - 1; i >= 0; i-- {
+				if addIfFits(prefixes[i]) {
+					selectedPrefixes = append([]string{prefixes[i]}, selectedPrefixes...)
+				}
+			}
+		}
+	}
+
+	return strings.Join(composeNameComponentsWithOrder(selectedPrefixes, selectedName, selectedSlug, selectedSuffixes, selectedRandom, componentOrder), separator), nil
+}
+
 // composeNameComponents composes every supplied component without enforcing a
 // maximum length. It is used by strict mode to report an overflow instead of
 // silently omitting lower-priority components.
@@ -520,6 +611,66 @@ func composeNameComponents(prefixes []string, name, slug string, suffixes []stri
 	return contents
 }
 
+func composeNameComponentsWithOrder(prefixes []string, name, slug string, suffixes []string, randomSuffix string, componentOrder []string) []string {
+	contents := []string{}
+	for _, component := range componentOrder {
+		switch component {
+		case "prefixes":
+			for _, prefix := range prefixes {
+				if len(prefix) > 0 {
+					contents = append(contents, prefix)
+				}
+			}
+		case "slug":
+			if len(slug) > 0 {
+				contents = append(contents, slug)
+			}
+		case "name":
+			if len(name) > 0 {
+				contents = append(contents, name)
+			}
+		case "random":
+			if len(randomSuffix) > 0 {
+				contents = append(contents, randomSuffix)
+			}
+		case "suffixes":
+			for _, suffix := range suffixes {
+				if len(suffix) > 0 {
+					contents = append(contents, suffix)
+				}
+			}
+		}
+	}
+	return contents
+}
+
+func componentOrderFromResourceData(d *schema.ResourceData) ([]string, error) {
+	componentOrder := convertInterfaceToString(d.Get("component_order").([]interface{}))
+	if len(componentOrder) == 0 {
+		return append([]string(nil), defaultComponentOrder...), nil
+	}
+
+	if len(componentOrder) != len(defaultComponentOrder) {
+		return nil, fmt.Errorf("component_order must contain each of prefixes, slug, name, random, and suffixes exactly once")
+	}
+
+	seen := make(map[string]bool, len(componentOrder))
+	allowed := make(map[string]bool, len(defaultComponentOrder))
+	for _, component := range defaultComponentOrder {
+		allowed[component] = true
+	}
+	for _, component := range componentOrder {
+		if !allowed[component] {
+			return nil, fmt.Errorf("component_order contains unsupported component %q", component)
+		}
+		if seen[component] {
+			return nil, fmt.Errorf("component_order contains duplicate component %q", component)
+		}
+		seen[component] = true
+	}
+	return componentOrder, nil
+}
+
 func validateResourceType(resourceType string, resourceTypes []string) (bool, error) {
 	isEmpty := len(resourceType) == 0 && len(resourceTypes) == 0
 	if isEmpty {
@@ -555,6 +706,22 @@ func getResourceName(resourceTypeName string, separator string,
 	useLegacySlug bool,
 	namePrecedence []string,
 	errorWhenExceedingMaxLength bool) (string, error) {
+	return getResourceNameWithComponentOrder(resourceTypeName, separator, prefixes, name, suffixes, randomSuffix, convention, cleanInput, passthrough, useSlug, useLegacySlug, namePrecedence, defaultComponentOrder, errorWhenExceedingMaxLength)
+}
+
+func getResourceNameWithComponentOrder(resourceTypeName string, separator string,
+	prefixes []string,
+	name string,
+	suffixes []string,
+	randomSuffix string,
+	convention string,
+	cleanInput bool,
+	passthrough bool,
+	useSlug bool,
+	useLegacySlug bool,
+	namePrecedence []string,
+	componentOrder []string,
+	errorWhenExceedingMaxLength bool) (string, error) {
 
 	resource, err := getResource(resourceTypeName)
 	if err != nil {
@@ -586,7 +753,7 @@ func getResourceName(resourceTypeName string, separator string,
 		}
 		resourceName = name
 	} else {
-		resourceName, err = composeName(separator, prefixes, name, slug, suffixes, randomSuffix, resource.MaxLength, namePrecedence, errorWhenExceedingMaxLength)
+		resourceName, err = composeNameWithComponentOrder(separator, prefixes, name, slug, suffixes, randomSuffix, resource.MaxLength, componentOrder, errorWhenExceedingMaxLength)
 		if err != nil {
 			return "", err
 		}
@@ -616,6 +783,10 @@ func getNameResult(d *schema.ResourceData, meta interface{}) error {
 	useSlug := d.Get("use_slug").(bool)
 	useLegacySlug := d.Get("use_legacy_slug").(bool)
 	errorWhenExceedingMaxLength := d.Get("error_when_exceeding_max_length").(bool)
+	componentOrder, err := componentOrderFromResourceData(d)
+	if err != nil {
+		return err
+	}
 	randomLength := d.Get("random_length").(int)
 	randomSeed := int64(d.Get("random_seed").(int))
 
@@ -637,7 +808,7 @@ func getNameResult(d *schema.ResourceData, meta interface{}) error {
 	convention := ConventionCafClassic
 
 	randomSuffix := randSeq(int(randomLength), &randomSeed)
-	namePrecedence := []string{"name", "slug", "random", "suffixes", "prefixes"}
+	namePrecedence := nameComponentPrecedence
 
 	isValid, err := validateResourceType(resourceType, resourceTypes)
 	if !isValid {
@@ -645,7 +816,7 @@ func getNameResult(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	if len(resourceType) > 0 {
-		resourceName, err := getResourceName(resourceType, separator, prefixes, name, suffixes, randomSuffix, convention, cleanInput, passthrough, useSlug, useLegacySlug, namePrecedence, errorWhenExceedingMaxLength)
+		resourceName, err := getResourceNameWithComponentOrder(resourceType, separator, prefixes, name, suffixes, randomSuffix, convention, cleanInput, passthrough, useSlug, useLegacySlug, namePrecedence, componentOrder, errorWhenExceedingMaxLength)
 		if err != nil {
 			return err
 		}
@@ -654,7 +825,7 @@ func getNameResult(d *schema.ResourceData, meta interface{}) error {
 	resourceNames := make(map[string]string, len(resourceTypes))
 	for _, resourceTypeName := range resourceTypes {
 		var err error
-		resourceNames[resourceTypeName], err = getResourceName(resourceTypeName, separator, prefixes, name, suffixes, randomSuffix, convention, cleanInput, passthrough, useSlug, useLegacySlug, namePrecedence, errorWhenExceedingMaxLength)
+		resourceNames[resourceTypeName], err = getResourceNameWithComponentOrder(resourceTypeName, separator, prefixes, name, suffixes, randomSuffix, convention, cleanInput, passthrough, useSlug, useLegacySlug, namePrecedence, componentOrder, errorWhenExceedingMaxLength)
 		if err != nil {
 			return err
 		}

@@ -55,6 +55,18 @@ func dataName() *schema.Resource {
 				Optional: true,
 				ForceNew: true,
 			},
+			"component_order": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				ForceNew:    true,
+				MinItems:    5,
+				MaxItems:    5,
+				Description: "Left-to-right order for prefixes, slug, name, random, and suffixes. Omit to use the existing provider order.",
+				Elem: &schema.Schema{
+					Type:         schema.TypeString,
+					ValidateFunc: validation.StringInSlice(defaultComponentOrder, false),
+				},
+			},
 			"random_length": {
 				Type:         schema.TypeInt,
 				Optional:     true,
@@ -137,6 +149,10 @@ func getNameReadResult(d *schema.ResourceData, meta interface{}) error {
 	useSlug := d.Get("use_slug").(bool)
 	useLegacySlug := d.Get("use_legacy_slug").(bool)
 	errorWhenExceedingMaxLength := d.Get("error_when_exceeding_max_length").(bool)
+	componentOrder, err := componentOrderFromResourceData(d)
+	if err != nil {
+		return err
+	}
 	randomLength := d.Get("random_length").(int)
 	randomSeed := int64(d.Get("random_seed").(int))
 
@@ -144,9 +160,9 @@ func getNameReadResult(d *schema.ResourceData, meta interface{}) error {
 
 	randomSuffix := randSeq(int(randomLength), &randomSeed)
 
-	namePrecedence := []string{"name", "slug", "random", "suffixes", "prefixes"}
+	namePrecedence := nameComponentPrecedence
 
-	resourceName, err := getResourceName(resourceType, separator, prefixes, name, suffixes, randomSuffix, convention, cleanInput, passthrough, useSlug, useLegacySlug, namePrecedence, errorWhenExceedingMaxLength)
+	resourceName, err := getResourceNameWithComponentOrder(resourceType, separator, prefixes, name, suffixes, randomSuffix, convention, cleanInput, passthrough, useSlug, useLegacySlug, namePrecedence, componentOrder, errorWhenExceedingMaxLength)
 	if err != nil {
 		return err
 	}
