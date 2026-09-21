@@ -83,10 +83,11 @@ func TestResourceMatrix(t *testing.T) {
 					}
 
 					resourceData := schema.TestResourceDataRaw(t, nameResource.Schema, map[string]interface{}{
-						"name":          "test",
-						"resource_type": resourceType,
-						"prefixes":      []interface{}{categoryPrefix},
-						"clean_input":   true,
+						"name":                             "test",
+						"resource_type":                   resourceType,
+						"prefixes":                        []interface{}{categoryPrefix},
+						"clean_input":                     true,
+						"error_when_exceeding_max_length": false,
 					})
 
 					err := nameResource.Create(resourceData, nil)

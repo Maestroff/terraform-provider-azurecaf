@@ -112,6 +112,25 @@ data "azurecaf_name" "custom" {
 # Output: "corp_prod_database_server_db_001_a1b2"
 ```
 
+### Custom Component Order with Strict Length Enforcement
+
+Combine `component_order` with `error_when_exceeding_max_length` to control exactly where each
+component lands and to fail fast instead of silently dropping components that don't fit:
+
+```hcl
+data "azurecaf_name" "strict_ordered" {
+  name                             = "myapp"
+  resource_type                    = "azurerm_resource_group"
+  prefixes                         = ["dev"]
+  suffixes                         = ["001"]
+  error_when_exceeding_max_length  = true
+  component_order                  = ["slug", "prefixes", "name", "random", "suffixes"]
+}
+
+# Produces "rg-dev-myapp-001" (before separator/case processing), or fails at plan time
+# with a descriptive error if the composed name exceeds the resource group max length.
+```
+
 
 ## Argument Reference
 
@@ -141,7 +160,7 @@ The following arguments are supported:
 
 * `use_slug` - (Optional) Include resource type abbreviation (slug) in the generated name. When `false`, no resource type identifier is added. Defaults to `true`.
 
-* `error_when_exceeding_max_length` - (Optional) Return an error instead of omitting name components when the composed name exceeds the resource type's maximum length. Defaults to `false`.
+* `error_when_exceeding_max_length` - (Optional) Return an error instead of omitting name components when the composed name exceeds the resource type's maximum length. Defaults to `true`. Set to `false` to restore the legacy silent-truncation behavior.
 
 * `component_order` - (Optional) Left-to-right placement of the five name components: `prefixes`, `slug`, `name`, `random`, and `suffixes`. Include each component exactly once. When omitted, the existing provider order is retained. For example, `["slug", "prefixes", "name", "random", "suffixes"]` produces `<slug>-<prefixes>-<name>-<random>-<suffixes>`.
 
@@ -192,9 +211,21 @@ data "azurecaf_name" "example" {
 
 ## Length Constraints and Truncation
 
+> **Default behavior**: `error_when_exceeding_max_length` defaults to `true`. When the composed
+> name exceeds a resource type's maximum length, `azurecaf_name` now fails at `plan` with a
+> descriptive error instead of silently dropping components. Set
+> `error_when_exceeding_max_length = false` to opt back into the legacy truncation behavior
+> described in this section.
+
 ### Maximum Length Enforcement
 
-Each Azure resource type has specific length constraints defined in the provider. When the composed name exceeds the maximum length, the provider applies intelligent truncation.
+Each Azure resource type has specific length constraints defined in the provider. When the
+composed name exceeds the maximum length:
+
+- **`error_when_exceeding_max_length = true` (default)**: the provider returns an error stating
+  the composed name and by how many characters it exceeds the limit.
+- **`error_when_exceeding_max_length = false`**: the provider applies intelligent truncation as
+  described below.
 
 ### Truncation Algorithm
 
@@ -221,6 +252,9 @@ This means if space is limited:
 - `suffixes` are dropped before `random` or `slug`
 
 ### Truncation Examples
+
+> The examples below assume `error_when_exceeding_max_length = false`. With the default
+> (`true`), each of these configurations would instead fail with an error at `plan`.
 
 #### Example 1: Prefix Truncation
 ```hcl
@@ -315,9 +349,10 @@ data "azurecaf_name" "example" {
 
 ### Length Validation
 
-- Names that exceed maximum length after truncation will cause errors
-- Random length is validated against resource type constraints
-- Minimum length requirements are enforced
+- By default (`error_when_exceeding_max_length = true`), composed names that exceed a resource type's maximum length fail with a descriptive error at `plan`.
+- Set `error_when_exceeding_max_length = false` to fall back to legacy truncation, where lower-priority components are silently omitted to fit within the limit.
+- Random length is validated against resource type constraints.
+- Minimum length requirements are enforced.
 
 ### Pattern Validation
 

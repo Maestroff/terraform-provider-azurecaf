@@ -94,11 +94,12 @@ func TestGetNameReadResult(t *testing.T) {
 		{
 			name: "with_prefixes_and_suffixes",
 			resourceData: map[string]interface{}{
-				"name":          "test",
-				"resource_type": "azurerm_storage_account",
-				"prefixes":      []interface{}{"prefix1", "prefix2"},
-				"suffixes":      []interface{}{"suffix1"},
-				"separator":     "-",
+				"name":                             "test",
+				"resource_type":                   "azurerm_storage_account",
+				"prefixes":                        []interface{}{"prefix1", "prefix2"},
+				"suffixes":                        []interface{}{"suffix1"},
+				"separator":                       "-",
+				"error_when_exceeding_max_length": false,
 			},
 			expectedErr: false,
 		},

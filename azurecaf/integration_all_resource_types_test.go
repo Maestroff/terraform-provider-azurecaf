@@ -42,12 +42,13 @@ func TestAcc_ResourceTypeBatch(t *testing.T) {
 			t.Run(fmt.Sprintf("Name_%s", sanitizeResourceType(resourceType)), func(t *testing.T) {
 				// Create ResourceData for the azurecaf_name resource
 				resourceData := schema.TestResourceDataRaw(t, nameResource.Schema, map[string]interface{}{
-					"name":          "testname",
-					"resource_type": resourceType,
-					"prefixes":      []interface{}{"dev"},
-					"suffixes":      []interface{}{"001"},
-					"random_length": 5,
-					"clean_input":   true,
+					"name":                             "testname",
+					"resource_type":                   resourceType,
+					"prefixes":                        []interface{}{"dev"},
+					"suffixes":                        []interface{}{"001"},
+					"random_length":                   5,
+					"clean_input":                     true,
+					"error_when_exceeding_max_length": false,
 				})
 
 				// Execute create function

@@ -261,8 +261,8 @@ func resourceName() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				ForceNew:    true,
-				Default:     false,
-				Description: "Return an error instead of omitting name components when the composed name exceeds the resource type maximum length.",
+				Default:     true,
+				Description: "Return an error instead of omitting name components when the composed name exceeds the resource type maximum length. Set to false to restore the legacy silent-truncation behavior.",
 			},
 		},
 	}
