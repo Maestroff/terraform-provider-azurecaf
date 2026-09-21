@@ -83,7 +83,7 @@ func TestResourceMatrix(t *testing.T) {
 					}
 
 					resourceData := schema.TestResourceDataRaw(t, nameResource.Schema, map[string]interface{}{
-						"name":                             "test",
+						"name":                            "test",
 						"resource_type":                   resourceType,
 						"prefixes":                        []interface{}{categoryPrefix},
 						"clean_input":                     true,

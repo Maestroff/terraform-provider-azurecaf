@@ -79,7 +79,7 @@ func testNameResource(t *testing.T, nameResource *schema.Resource, resourceType 
 	testCases := []map[string]interface{}{
 		// Basic configuration
 		{
-			"name":                             "testname",
+			"name":                            "testname",
 			"resource_type":                   resourceType,
 			"prefixes":                        []interface{}{"dev"},
 			"suffixes":                        []interface{}{"001"},
@@ -89,7 +89,7 @@ func testNameResource(t *testing.T, nameResource *schema.Resource, resourceType 
 		},
 		// Configuration with separators
 		{
-			"name":                             "testname",
+			"name":                            "testname",
 			"resource_type":                   resourceType,
 			"prefixes":                        []interface{}{"prod", "web"},
 			"suffixes":                        []interface{}{"001", "east"},
@@ -101,7 +101,7 @@ func testNameResource(t *testing.T, nameResource *schema.Resource, resourceType 
 		},
 		// Configuration without random
 		{
-			"name":                             "testname",
+			"name":                            "testname",
 			"resource_type":                   resourceType,
 			"prefixes":                        []interface{}{"test"},
 			"clean_input":                     true,
@@ -151,7 +151,7 @@ func testNameResource(t *testing.T, nameResource *schema.Resource, resourceType 
 func testNameDataSource(t *testing.T, nameDataSource *schema.Resource, resourceType string) {
 	// Create ResourceData for the azurecaf_name data source
 	dataSourceData := schema.TestResourceDataRaw(t, nameDataSource.Schema, map[string]interface{}{
-		"name":                             "testname",
+		"name":                            "testname",
 		"resource_type":                   resourceType,
 		"prefixes":                        []interface{}{"dev"},
 		"suffixes":                        []interface{}{"001"},

@@ -35,7 +35,7 @@ func TestResourceCoverage(t *testing.T) {
 		t.Run(fmt.Sprintf("Coverage_%s", sanitizeResourceType(resourceType)), func(t *testing.T) {
 			// Test basic functionality
 			resourceData := schema.TestResourceDataRaw(t, nameResource.Schema, map[string]interface{}{
-				"name":                             "test",
+				"name":                            "test",
 				"resource_type":                   resourceType,
 				"clean_input":                     true,
 				"error_when_exceeding_max_length": false,
