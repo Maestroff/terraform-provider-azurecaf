@@ -79,30 +79,33 @@ func testNameResource(t *testing.T, nameResource *schema.Resource, resourceType 
 	testCases := []map[string]interface{}{
 		// Basic configuration
 		{
-			"name":          "testname",
-			"resource_type": resourceType,
-			"prefixes":      []interface{}{"dev"},
-			"suffixes":      []interface{}{"001"},
-			"random_length": 5,
-			"clean_input":   true,
+			"name":                            "testname",
+			"resource_type":                   resourceType,
+			"prefixes":                        []interface{}{"dev"},
+			"suffixes":                        []interface{}{"001"},
+			"random_length":                   5,
+			"clean_input":                     true,
+			"error_when_exceeding_max_length": false,
 		},
 		// Configuration with separators
 		{
-			"name":          "testname",
-			"resource_type": resourceType,
-			"prefixes":      []interface{}{"prod", "web"},
-			"suffixes":      []interface{}{"001", "east"},
-			"separator":     "-",
-			"random_length": 3,
-			"clean_input":   true,
-			"use_slug":      true,
+			"name":                            "testname",
+			"resource_type":                   resourceType,
+			"prefixes":                        []interface{}{"prod", "web"},
+			"suffixes":                        []interface{}{"001", "east"},
+			"separator":                       "-",
+			"random_length":                   3,
+			"clean_input":                     true,
+			"use_slug":                        true,
+			"error_when_exceeding_max_length": false,
 		},
 		// Configuration without random
 		{
-			"name":          "testname",
-			"resource_type": resourceType,
-			"prefixes":      []interface{}{"test"},
-			"clean_input":   true,
+			"name":                            "testname",
+			"resource_type":                   resourceType,
+			"prefixes":                        []interface{}{"test"},
+			"clean_input":                     true,
+			"error_when_exceeding_max_length": false,
 		},
 	}
 
@@ -148,12 +151,13 @@ func testNameResource(t *testing.T, nameResource *schema.Resource, resourceType 
 func testNameDataSource(t *testing.T, nameDataSource *schema.Resource, resourceType string) {
 	// Create ResourceData for the azurecaf_name data source
 	dataSourceData := schema.TestResourceDataRaw(t, nameDataSource.Schema, map[string]interface{}{
-		"name":          "testname",
-		"resource_type": resourceType,
-		"prefixes":      []interface{}{"dev"},
-		"suffixes":      []interface{}{"001"},
-		"random_length": 5,
-		"clean_input":   true,
+		"name":                            "testname",
+		"resource_type":                   resourceType,
+		"prefixes":                        []interface{}{"dev"},
+		"suffixes":                        []interface{}{"001"},
+		"random_length":                   5,
+		"clean_input":                     true,
+		"error_when_exceeding_max_length": false,
 	})
 
 	// Execute read function
