@@ -36,7 +36,7 @@ terraform {
   required_providers {
     azurecaf = {
       source  = "aztfmodnew/azurecaf"
-      version = "~> 1.2.28"  # Use the latest version
+      version = "~> 2.0.0"  # Use the latest version
     }
   }
 }

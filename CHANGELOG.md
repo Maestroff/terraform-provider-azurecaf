@@ -7,18 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
-- (placeholder)
+## [v2.0.0] - 2026-09-21
 
 ### Changed
 - **BREAKING**: `error_when_exceeding_max_length` now defaults to `true` on `azurecaf_name` (resource and data source). Previously, when a composed name exceeded a resource type's maximum length, components were silently omitted/truncated. Now this fails at `plan`/`apply` with a descriptive error by default.
   - **Action Required**: Add `error_when_exceeding_max_length = false` to existing `azurecaf_name` resources/data sources that rely on silent truncation to keep the old behavior.
-
-### Fixed
-- (placeholder)
-
-### Security
-- (placeholder)
 
 ## [v1.1.0] - 2026-07-11
 
